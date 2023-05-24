@@ -23,7 +23,6 @@ class Program extends Model
     ];
 
 
-
     protected $dates = ['deleted_at'];
 
     protected $hidden = [

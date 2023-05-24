@@ -19,6 +19,7 @@ class Advisor extends Model
         'address',
         'gender',
         'discipline_id',
+        'user_id'
     ];
     protected $hidden = [
         'created_at', 'updated_at', 'deleted_at'
@@ -49,4 +50,8 @@ class Advisor extends Model
         return $this->belongsToMany(Trainee::class, 'program_trainee')
             ->wherePivot('program_id', $programId);
     }
+//    public function user()
+//    {
+//        return $this->belongsTo(User::class);
+//    }
 }

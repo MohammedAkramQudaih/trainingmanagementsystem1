@@ -110,7 +110,11 @@ class ManagersController extends Controller
         $acceptedTrainee->password ='$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
         $acceptedTrainee->role = 'trainee';
         $acceptedTrainee->save();
-        return $trainee;
+        //
+        $user_id = $acceptedTrainee->getAttribute('id');
+        $trainee->update(['user_id'=>$user_id]);
+        return $acceptedTrainee;
+
     }
 
     public function listAllTrainees()
@@ -123,6 +127,16 @@ class ManagersController extends Controller
     {
         $advisros = Advisor::withoutTrashed()->get();
         return $advisros;
+    }
+    public function getManagerInfo()
+    {
+        $user = auth()->user();
+        if ($user->manager) {
+            $manager = $user->manager;
+            return response()->json($manager, 200);
+        } else {
+            return response()->json(['message' => 'User is not an Trainee'], 403);
+        }
     }
 
 }

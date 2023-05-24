@@ -42,8 +42,21 @@ Route::apiResource(
 )->middleware('auth:sanctum');
 
 
+Route::apiResource(
+    'files',
+    \App\Http\Controllers\Api\StoredFileController::class
+);
+
+
 Route::post('/manager/accept-trainee/{id}',
     [\App\Http\Controllers\Api\ManagersController::class,'acceptTrainee'])->middleware('auth:sanctum');
+
+Route::get('/advisor/profile/',
+    [\App\Http\Controllers\Api\AdvisorsController::class,'getAdvisorInfo'])->middleware('auth:sanctum');
+Route::get('/manager/profile/',
+    [\App\Http\Controllers\Api\ManagersController::class,'getManagerInfo'])->middleware('auth:sanctum');
+Route::get('/trainee/profile/',
+    [\App\Http\Controllers\Api\TraineesController::class,'getTraineeInfo'])->middleware('auth:sanctum');
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/trainee/login', [AuthController::class,'traineeLogin']);

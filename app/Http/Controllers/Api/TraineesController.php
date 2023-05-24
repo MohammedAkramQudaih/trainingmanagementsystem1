@@ -115,4 +115,14 @@ class TraineesController extends Controller
         $trainee = Trainee::withoutTrashed()->find($id);
         $trainee->delete();
     }
+    public function getTraineeInfo()
+    {
+        $user = auth()->user();
+        if ($user->trainee) {
+            $trainee = $user->trainee;
+            return response()->json($trainee, 200);
+        } else {
+            return response()->json(['message' => 'User is not an Trainee'], 403);
+        }
+    }
 }

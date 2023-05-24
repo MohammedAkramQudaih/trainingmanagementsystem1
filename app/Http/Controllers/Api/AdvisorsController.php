@@ -117,4 +117,14 @@ class AdvisorsController extends Controller
             'message' => 'The Advisor deleted Successfully'
         ]);
     }
+    public function getAdvisorInfo()
+    {
+        $user = auth()->user();
+        if ($user->advisor) {
+            $advisor = $user->advisor;
+            return response()->json($advisor, 200);
+        } else {
+            return response()->json(['message' => 'User is not an advisor'], 403);
+        }
+    }
 }

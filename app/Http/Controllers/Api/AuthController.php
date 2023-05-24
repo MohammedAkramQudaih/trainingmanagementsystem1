@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
+use App\Models\Manager;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,17 +29,26 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
             'role' => 'manager'
         ]);
-
         $user->save();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = User::where('email', $request->email)->first();
 
+        $user_id = $user->getAttribute('id');
+        //create the manager row
+        $manager = new Manager([
+            'name' => $request->name,
+            'email' => $request->email,
+            'user_id' => $user_id,
+        ]);
+        $manager->save();
+        $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
             'user' => $user
         ], 201);
     }
+
     public function registerAdvisor(Request $request)
     {
         $request->validate([
@@ -55,9 +65,17 @@ class AuthController extends Controller
         ]);
 
         $user->save();
-
+        $user = User::where('email', $request->email)->first();
+        $user_id = $user->getAttribute('id');
+        //create the advisor row
+        $advisor = new Advisor([
+            'name' => $request->name,
+            'email' => $request->email,
+            'user_id' => $user_id,
+            'discipline_id' => $request->discipline_id
+        ]);
+        $advisor->save();
         $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
@@ -120,6 +138,7 @@ class AuthController extends Controller
             'token' => $advisor->createToken('mobile', ['role:advisor'])->plainTextToken
         ]);
     }
+
     public function managerLogin(Request $request)
     {
         $manager = User::where('email', $request->email)->first();
@@ -130,12 +149,12 @@ class AuthController extends Controller
         }
         return response()->json([
             'manager' => $manager,
-            'token' => $manager ->createToken('mobile', ['role:manager'])->plainTextToken
+            'token' => $manager->createToken('mobile', ['role:manager'])->plainTextToken
         ]);
     }
 
 
-    //to to test it in postman
+    //to test it in postman
     /*
      * Send a POST request to your logout route or URL (e.g., /api/logout).
 Make sure you include the necessary authentication headers, such as the Authorization header with the user's token.

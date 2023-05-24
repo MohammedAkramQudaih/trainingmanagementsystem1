@@ -22,6 +22,7 @@ class Trainee extends Model
         'status',
         'trainee_id',
         'bio',
+        'user_id'
     ];
 
     protected $hidden = [
@@ -34,5 +35,8 @@ class Trainee extends Model
     {
         return $this->belongsToMany(Program::class, 'program_trainee');
     }
-
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

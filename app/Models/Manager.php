@@ -15,9 +15,14 @@ class Manager extends Model
         'email',
         'phone_number',
         'address',
+        'user_id'
     ];
     protected $hidden = [
         'created_at','updated_at','deleted_at'
     ];
     protected $dates = ['deleted_at'];
+//    public function user()
+//    {
+//        return $this->belongsTo(User::class);
+//    }
 }

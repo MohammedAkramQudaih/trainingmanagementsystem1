@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('status', ['Suspended', 'Accepted'])->default('Suspended');
             $table->string('trainee_id')->nullable()->unique()->whereNotNull('trainee_id');
             $table->string('bio');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
