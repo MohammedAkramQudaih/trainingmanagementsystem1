@@ -36,7 +36,7 @@ class ProgramsController extends Controller
             'description' => 'nullable|string',
             'discipline_id' => 'required|exists:disciplines,id',
             'logo' => 'nullable|string',
-            'advisor_id' => 'required|exists:advisors,id',
+            ' ' => 'required|exists:advisors,id',
             'capacity' => 'required|integer',
             'company' => 'required|string',
         ]);

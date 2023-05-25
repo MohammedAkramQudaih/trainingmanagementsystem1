@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Manager;
 use App\Models\Trainee;
+use App\Models\TrainingRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -107,12 +108,12 @@ class ManagersController extends Controller
         $acceptedTrainee->email = $trainee->email;
         $acceptedTrainee->trainee_id = $number;
         //default password for new accepted trainee it's from 1 to 8
-        $acceptedTrainee->password ='$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
+        $acceptedTrainee->password = '$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
         $acceptedTrainee->role = 'trainee';
         $acceptedTrainee->save();
         //
         $user_id = $acceptedTrainee->getAttribute('id');
-        $trainee->update(['user_id'=>$user_id]);
+        $trainee->update(['user_id' => $user_id]);
         return $acceptedTrainee;
 
     }
@@ -128,6 +129,7 @@ class ManagersController extends Controller
         $advisros = Advisor::withoutTrashed()->get();
         return $advisros;
     }
+
     public function getManagerInfo()
     {
         $user = auth()->user();
@@ -137,6 +139,24 @@ class ManagersController extends Controller
         } else {
             return response()->json(['message' => 'User is not an Trainee'], 403);
         }
+    }
+
+    public function acceptTrainingRequest($trainee_id, $program_id, $status)
+    {
+        $trainingRequest = TrainingRequest::find([$trainee_id, $program_id]);
+
+        if ($status == 'Rejected') {
+            $trainingRequest->status = 'Rejected';
+        } else if ($status == 'Accepted') {
+            $trainingRequest->status = 'Accepted';
+        }
+        $trainee = Trainee::find($trainee_id);
+        $trainee->programs()->attach($program_id);
+
+        return response()->json([
+            'message' => 'Accepted Successfully'
+        ]);
+
     }
 
 }

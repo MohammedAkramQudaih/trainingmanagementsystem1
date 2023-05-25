@@ -50,6 +50,14 @@ Route::apiResource(
 
 Route::post('/manager/accept-trainee/{id}',
     [\App\Http\Controllers\Api\ManagersController::class,'acceptTrainee'])->middleware('auth:sanctum');
+Route::post('/manager/trainees/{trainee_id}/programs/{program_id}',
+    [\App\Http\Controllers\Api\ManagersController::class,'acceptTrainingRequest'])->middleware('auth:sanctum');
+
+
+
+Route::post('/trainee/apply-program/',
+    [\App\Http\Controllers\Api\TrainingRequestsController::class,'store'])->middleware('auth:sanctum');
+
 
 Route::get('/advisor/profile/',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getAdvisorInfo'])->middleware('auth:sanctum');

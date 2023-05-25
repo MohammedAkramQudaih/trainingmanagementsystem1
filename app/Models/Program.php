@@ -20,6 +20,7 @@ class Program extends Model
         'logo',
         'capacity',
         'company',
+        'advisor_id'
     ];
 
 
