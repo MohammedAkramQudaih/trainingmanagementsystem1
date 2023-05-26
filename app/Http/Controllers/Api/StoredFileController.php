@@ -69,7 +69,6 @@ class StoredFileController extends Controller
      */
     public function destroy(string $id)
     {
-        //
         $file = StoredFile::withoutTrashed()->find($id);
         $file->delete();
         return response()->json([

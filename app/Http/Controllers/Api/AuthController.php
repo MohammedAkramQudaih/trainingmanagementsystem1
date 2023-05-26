@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Manager;
+use Exception;
 use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use \App\Models\User;
@@ -22,65 +24,77 @@ class AuthController extends Controller
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
         ]);
+        $user = null;
+        DB::beginTransaction();
+        try {
 
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'manager'
-        ]);
-        $user->save();
+            $user = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'manager'
+            ]);
+            $user->save();
+            $user = User::where('email', $request->email)->first();
+            $user_id = $user->getAttribute('id');
+            //create the manager row
+            $manager = new Manager([
+                'name' => $request->name,
+                'email' => $request->email,
+                'user_id' => $user_id,
+            ]);
+            $manager->save();
+            DB::commit();
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
 
-        $user = User::where('email', $request->email)->first();
-
-        $user_id = $user->getAttribute('id');
-        //create the manager row
-        $manager = new Manager([
-            'name' => $request->name,
-            'email' => $request->email,
-            'user_id' => $user_id,
-        ]);
-        $manager->save();
-        $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user
-        ], 201);
     }
 
     public function registerAdvisor(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|string|min:8',
         ]);
+        DB::beginTransaction();
+        try {
+            $user = new User([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => 'advisor'
+            ]);
+            $user->save();
+            $user = User::where('email', $request->email)->first();
+            $user_id = $user->getAttribute('id');
+            //create the advisor row
+            $advisor = new Advisor([
+                'name' => $request->name,
+                'email' => $request->email,
+                'user_id' => $user_id,
+                'discipline_id' => $request->discipline_id
+            ]);
+            $advisor->save();
+            DB::commit();
+            $token = $user->createToken('auth_token')->plainTextToken;
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user
+            ], 201);
+        } catch (Exception $e) {
+            DB::rollBack();
+        }
 
-        $user = new User([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => 'advisor'
-        ]);
-
-        $user->save();
-        $user = User::where('email', $request->email)->first();
-        $user_id = $user->getAttribute('id');
-        //create the advisor row
-        $advisor = new Advisor([
-            'name' => $request->name,
-            'email' => $request->email,
-            'user_id' => $user_id,
-            'discipline_id' => $request->discipline_id
-        ]);
-        $advisor->save();
-        $token = $user->createToken('auth_token')->plainTextToken;
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'user' => $user
-        ], 201);
     }
 
     /*

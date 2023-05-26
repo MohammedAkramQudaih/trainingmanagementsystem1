@@ -31,6 +31,12 @@ class TraineesController extends Controller
 //PUT|PATCH /api/projects/{project_id} -> update
 //DELETE /api/projects/{project_id} -> destroy
 
+
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum'])->except(['store']);
+    }
+
     public function store(Request $request)
     {
         //
@@ -50,8 +56,8 @@ class TraineesController extends Controller
 
 // Set the attributes
         $trainee->name = $request->name;
-        $trainee->email =  $request->email;
-        $trainee->phone_number =  $request->phone_number;
+        $trainee->email = $request->email;
+        $trainee->phone_number = $request->phone_number;
         $trainee->address = $request->address;
         $trainee->university_name = $request->university_name;
         $trainee->university_id = $request->university_id;
@@ -115,6 +121,7 @@ class TraineesController extends Controller
         $trainee = Trainee::withoutTrashed()->find($id);
         $trainee->delete();
     }
+
     public function getTraineeInfo()
     {
         $user = auth()->user();

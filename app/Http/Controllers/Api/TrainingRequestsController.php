@@ -17,8 +17,8 @@ class TrainingRequestsController extends Controller
         //
         $trainingRequests = TrainingRequest::all();
         return response()->json([
-                'Training Requests' =>
-                    $trainingRequests,200
+            'Training Requests' =>
+                $trainingRequests, 200
         ]);
 
     }

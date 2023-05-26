@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
+use App\Models\Meeting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdvisorsController extends Controller
 {
@@ -117,6 +119,7 @@ class AdvisorsController extends Controller
             'message' => 'The Advisor deleted Successfully'
         ]);
     }
+
     public function getAdvisorInfo()
     {
         $user = auth()->user();
@@ -126,5 +129,36 @@ class AdvisorsController extends Controller
         } else {
             return response()->json(['message' => 'User is not an advisor'], 403);
         }
+    }
+
+    public function acceptMeeting(Request $request, $meeting_id)
+    {
+        $meeting = Meeting::find($meeting_id);
+        $status = $request->status;
+        if ($status == 'Accepted') {
+            $meeting->status = 'Accepted';
+        } else if ($status == 'Rejected') {
+            $meeting->status = 'Rejected';
+        }
+        return response()->json(['message' => 'Meeting updated successfully', 'meeting' => $meeting], 200);
+        $meeting->save();
+    }
+
+    public function getMeetingsRequests($advisor_id)
+    {
+        $advisor = Advisor::find($advisor_id);
+
+        if($advisor) {
+            $meetings = $advisor->meetings;
+            return response()->json([
+                'meetings' => $meetings],
+                200);
+        }else {
+            return response()->json([
+                'message' => 'No Avisor has an id = ' . $advisor_id],
+                200);
+        }
+
+
     }
 }

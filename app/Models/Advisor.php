@@ -54,4 +54,8 @@ class Advisor extends Model
 //    {
 //        return $this->belongsTo(User::class);
 //    }
+    public function meetings()
+    {
+        return $this->hasMany(Meeting::class, 'advisor_id');
+    }
 }
