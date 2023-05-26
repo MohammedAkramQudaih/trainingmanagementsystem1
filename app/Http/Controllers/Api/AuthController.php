@@ -16,7 +16,6 @@ use \App\Models\User;
 
 class AuthController extends Controller
 {
-    //
     public function registerManager(Request $request)
     {
         $request->validate([
@@ -54,7 +53,6 @@ class AuthController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
         }
-
     }
 
     public function registerAdvisor(Request $request)

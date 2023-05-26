@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Meeting;
+use App\Models\Program;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class AdvisorsController extends Controller
@@ -148,17 +150,30 @@ class AdvisorsController extends Controller
     {
         $advisor = Advisor::find($advisor_id);
 
-        if($advisor) {
+        if ($advisor) {
             $meetings = $advisor->meetings;
             return response()->json([
                 'meetings' => $meetings],
                 200);
-        }else {
+        } else {
             return response()->json([
                 'message' => 'No Avisor has an id = ' . $advisor_id],
                 200);
         }
 
 
+    }
+
+    public function getAllPrograms()
+    {
+        $advisor_id = Auth::user()->advisor->id;
+        $advisor = Advisor::find($advisor_id);
+        $programs = $advisor->programs;
+        return $programs;
+    }
+    public function getAllTraineesByProgram($program_id) {
+        $program = Program::withoutTrashed()->find($program_id);
+        $trainees = $program->trainees;
+        return $trainees;
     }
 }

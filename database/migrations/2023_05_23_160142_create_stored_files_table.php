@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('fileUrl')->unique();
             $table->string('fileType');
             $table->integer('fileSize');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('trainee_id');
+            $table->unsignedBigInteger('program_id');
+//            $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));

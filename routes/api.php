@@ -65,6 +65,10 @@ Route::post('/trainee/apply-program/',
 
 Route::post('/advisor/acceptMeeting',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');;
 Route::get('/advisor/get-meetings/{advisor_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'getMeetingsRequests'])
+    ->middleware('auth:sanctum');
+Route::get('/advisor/get-programs',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllPrograms'])
+    ->middleware('auth:sanctum');
+Route::get('/advisor/get-trainees/{program_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllTraineesByProgram'])
     ->middleware('auth:sanctum');;
 
 

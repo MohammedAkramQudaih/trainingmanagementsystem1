@@ -60,10 +60,10 @@ class User extends Model
     {
         return $this->hasOne(Trainee::class);
     }
-    public function storedFiles()
-    {
-        return $this->hasMany(StoredFile::class);
-    }
+//    public function storedFiles()
+//    {
+//        return $this->hasMany(StoredFile::class);
+//    }
     public function notifications()
     {
         return $this->hasMany(Notification::class);

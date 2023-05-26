@@ -39,22 +39,19 @@ class TraineesController extends Controller
 
     public function store(Request $request)
     {
-        //
         $request->validate([
             'name' => 'required|string',
             'email' => 'required|email|unique:trainees,email',
-            'phone_number' => 'required|string',
-            'address' => 'required|string',
-            'university_name' => 'required|string',
-            'university_id' => 'required|string|unique:trainees,university_id',
+            'phone_number' => 'sometimes|string',
+            'password' => 'required|string',
+            'address' => 'sometimes|string',
+            'university_name' => 'sometimes|string',
+            'university_id' => 'sometimes|string|unique:trainees,university_id',
             'gender' => 'required|in:male,female',
-            'status' => 'required|in:Suspended,Accepted',
             'trainee_id' => 'nullable|string|unique:trainees,trainee_id',
-            'bio' => 'required|string',
+            'bio' => 'sometimes|string',
         ]);
         $trainee = new Trainee;
-
-// Set the attributes
         $trainee->name = $request->name;
         $trainee->email = $request->email;
         $trainee->phone_number = $request->phone_number;
@@ -66,6 +63,7 @@ class TraineesController extends Controller
         $trainee->trainee_id = null;
         $trainee->bio = $request->bio;
         $trainee->save();
+
     }
 
     /**
@@ -97,6 +95,7 @@ class TraineesController extends Controller
             'email' => 'sometimes|required|email|unique:trainees,email',
             'phone_number' => 'sometimes|required|string',
             'address' => 'sometimes|required|string',
+            'password' => 'sometimes|string',
             'university_name' => 'sometimes|required|string',
             'university_id' => 'sometimes|required|string|unique:trainees,university_id',
             'gender' => 'sometimes|required|in:male,female',
