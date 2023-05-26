@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TraineeAttendanceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
@@ -52,7 +53,7 @@ Route::post('/manager/accept-trainee/{id}',
     [\App\Http\Controllers\Api\ManagersController::class,'acceptTrainee'])->middleware('auth:sanctum');
 Route::post('/manager/trainees/{trainee_id}/programs/{program_id}',
     [\App\Http\Controllers\Api\ManagersController::class,'acceptTrainingRequest'])->middleware('auth:sanctum');
-
+Route::post('/trainee/attendance', [TraineeAttendanceController::class, 'store'])->middleware('auth:sanctum');
 
 
 Route::post('/trainee/apply-program/',

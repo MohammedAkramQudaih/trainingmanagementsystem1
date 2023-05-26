@@ -33,7 +33,14 @@ class Trainee extends Model
 
     public function programs()
     {
-        return $this->belongsToMany(Program::class, 'program_trainee');
+        return $this->belongsToMany(
+            Program::class, //related model
+            'program_trainee',//pivot table
+            'trainee_id',//f.k for current model in pivot table
+            'program_id',// f.k for related model in pivot table
+            'id', //current model key(p.k)
+            'id' //related model key(p.k for related model )
+        );
     }
     public function user()
     {

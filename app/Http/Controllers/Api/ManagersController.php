@@ -9,6 +9,7 @@ use App\Models\Trainee;
 use App\Models\TrainingRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ManagersController extends Controller
 {
@@ -141,23 +142,33 @@ class ManagersController extends Controller
         }
     }
 
-    public function acceptTrainingRequest($trainee_id, $program_id, $status)
+    public function acceptTrainingRequest($trainee_id, $program_id, Request $request)
     {
-        $trainingRequest = TrainingRequest::find([$trainee_id, $program_id]);
 
+//        $trainingRequest = TrainingRequest::find([$program_id,$trainee_id]);
+        $trainingRequest = DB::table('training_requests')
+            ->where('trainee_id', '=', $trainee_id)
+            ->where('program_id', '=', $program_id)
+            ->get();
+//        return $trainingRequest;
+        $status = $request->status;
+//        return $status;
         if ($status == 'Rejected') {
-            $trainingRequest->status = 'Rejected';
+            DB::table('training_requests')
+                ->where('trainee_id', '=', $trainee_id)
+                ->where('program_id', '=', $program_id)
+                ->update(['status' => 'Rejected']);
         } else if ($status == 'Accepted') {
-            $trainingRequest->status = 'Accepted';
+            DB::table('training_requests')
+                ->where('trainee_id', '=', $trainee_id)
+                ->where('program_id', '=', $program_id)
+                ->update(['status' => 'Accepted']);
+            $trainee = Trainee::find($trainee_id);
+            $trainee->programs()->attach($program_id);
         }
-        $trainee = Trainee::find($trainee_id);
-        $trainee->programs()->attach($program_id);
-
         return response()->json([
-            'message' => 'Accepted Successfully'
+            'message' => $status . " Successfully"
         ]);
-
     }
-
 }
 

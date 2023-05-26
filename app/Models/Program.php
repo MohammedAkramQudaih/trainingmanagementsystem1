@@ -20,7 +20,7 @@ class Program extends Model
         'logo',
         'capacity',
         'company',
-        'advisor_id'
+        'advisor_id  '
     ];
 
 
@@ -37,11 +37,25 @@ class Program extends Model
 //    {
 //        return $this->belongsToMany(Trainee::class);
 //    }
-
+/*
+ *             Program::class, //related model
+            'program_trainee',//pivot table
+            'trainee_id',//f.k for current model in pivot table
+            'program_id',// f.k for related model in pivot table
+            'id', //current model key(p.k)
+            'id' //related model key(p.k for related model )
+ */
 
     public function trainees()
     {
-        return $this->belongsToMany(Trainee::class, 'program_trainee');
+        return $this->belongsToMany(
+            Trainee::class,
+            'program_trainee',
+            'program_id',
+            'trainee_id',
+            'id',
+            'id'
+        );
     }
 
     public function advisor()
