@@ -54,6 +54,9 @@ Route::apiResource(
 
 Route::post('/manager/accept-trainee/{id}',
     [\App\Http\Controllers\Api\ManagersController::class, 'acceptTrainee'])->middleware('auth:sanctum');
+Route::get('/manager/advisors/{discipline_id}',
+    [\App\Http\Controllers\Api\ManagersController::class, 'getAdvisorsByDisciplinesId'])->middleware('auth:sanctum');
+
 Route::post('/manager/trainees/{trainee_id}/programs/{program_id}',
     [\App\Http\Controllers\Api\ManagersController::class, 'acceptTrainingRequest'])->middleware('auth:sanctum');
 Route::post('/trainees/attendance', [TraineeAttendanceController::class, 'store'])->middleware('auth:sanctum');
@@ -61,9 +64,12 @@ Route::post('/trainees/attendance', [TraineeAttendanceController::class, 'store'
 Route::post('/trainees/create-meeting',[\App\Http\Controllers\Api\MeetingsController::class,'store'])->middleware('auth:sanctum');
 Route::post('/trainee/apply-program/',
     [\App\Http\Controllers\Api\TrainingRequestsController::class, 'store'])->middleware('auth:sanctum');
-Route::get('/trainees/get-files/{trainee_id}',[\App\Http\Controllers\Api\StoredFileController::class,'getTraineeFiles'])
+Route::get('/trainees/get-files/{trainee_id}',
+    [\App\Http\Controllers\Api\StoredFileController::class,'getTraineeFiles'])
     ->middleware('auth:sanctum');
-Route::get('/programs/get-logo/{program_id}',[\App\Http\Controllers\Api\StoredFileController::class,'getProgramLogo'])
+
+Route::get('/programs/get-logo/{program_id}',
+    [\App\Http\Controllers\Api\StoredFileController::class,'getProgramLogo'])
     ->middleware('auth:sanctum');
 
 Route::post('/advisor/acceptMeeting',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');;

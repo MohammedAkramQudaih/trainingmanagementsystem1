@@ -21,7 +21,6 @@ class AdvisorsController extends Controller
     {
         //
         $advisors = Advisor::withoutTrashed()->with('discipline')->get();
-
         return $advisors;
     }
 
@@ -177,4 +176,5 @@ class AdvisorsController extends Controller
         $trainees = $program->trainees;
         return $trainees;
     }
+
 }

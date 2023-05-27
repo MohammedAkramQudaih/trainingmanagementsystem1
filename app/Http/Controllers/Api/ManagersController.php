@@ -170,5 +170,14 @@ class ManagersController extends Controller
             'message' => $status . " Successfully"
         ]);
     }
+
+
+    function getAdvisorsByDisciplinesId($discipline_id)
+    {
+        $advisors = Advisor::withoutTrashed()->where('discipline_id', $discipline_id)->get();
+        return response()->json([
+            'advisors' => $advisors
+        ]);
+    }
 }
 
