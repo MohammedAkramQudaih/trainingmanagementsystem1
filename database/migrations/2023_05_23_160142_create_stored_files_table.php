@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('fileUrl')->unique();
             $table->string('fileType');
             $table->integer('fileSize');
-            $table->unsignedBigInteger('trainee_id');
-            $table->unsignedBigInteger('program_id');
+            $table->unsignedBigInteger('trainee_id')->nullable();
+            $table->unsignedBigInteger('program_id')->nullable();
 //            $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();

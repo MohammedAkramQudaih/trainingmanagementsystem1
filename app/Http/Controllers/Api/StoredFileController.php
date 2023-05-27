@@ -39,7 +39,9 @@ class StoredFileController extends Controller
         $storedFile->fileUrl = $request->input('fileUrl');
         $storedFile->fileType = $request->input('fileType');
         $storedFile->fileSize = $request->input('fileSize');
-        $storedFile->user_id = $request->input('user_id');
+        $storedFile->trainee_id = $request->input('trainee_id') ?? null;
+        $storedFile->program_id = $request->input('program_id') ?? null;
+
         $storedFile->save();
         return response()->json([
             'File' => $storedFile,
@@ -50,11 +52,10 @@ class StoredFileController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $userId)
+    public function show(string $id)
     {
-        $user = User::find($userId);
-        $files = $user->storedFiles;
-        return response()->json($files, 200);
+        $file = StoredFile::withoutTrashed()->find($id);
+        return response()->json($file, 200);
     }
 
     /**
@@ -74,6 +75,18 @@ class StoredFileController extends Controller
         $file->delete();
         return response()->json([
             'message' => 'The File deleted Successfully'
+        ]);
+    }
+    public function getTraineeFiles($trainee_id) {
+        $files = StoredFile::withoutTrashed()->where('trainee_id',$trainee_id)->get();
+        return response()->json([
+            'files' => $files
+        ]);
+    }
+    public function getProgramLogo($program_id) {
+        $files = StoredFile::withoutTrashed()->where('program_id',$program_id)->get();
+        return response()->json([
+            'files' => $files
         ]);
     }
 }

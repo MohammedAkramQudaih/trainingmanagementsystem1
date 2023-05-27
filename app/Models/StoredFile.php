@@ -15,7 +15,8 @@ class StoredFile extends Model
         'fileName',
         'fileType',
         'fileSize',
-        'user_id',
+        'trainee_id',
+        'program_id',
         'fileUrl'
     ];
 

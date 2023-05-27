@@ -20,7 +20,8 @@ class AdvisorsController extends Controller
     public function index()
     {
         //
-        $advisors = Advisor::withoutTrashed()->get();
+        $advisors = Advisor::withoutTrashed()->with('discipline')->get();
+
         return $advisors;
     }
 
