@@ -31,7 +31,8 @@ class StoredFileController extends Controller
             'fileUrl' => 'required|string|unique:stored_files,fileUrl',
             'fileType' => 'required|string',
             'fileSize' => 'required|integer',
-            'user_id' => 'required|integer|exists:users,id'
+            'trainee_id' => 'sometimes|integer',
+            'program_id' => 'sometimes|integer'
         ]);
         $storedFile = new StoredFile();
         $storedFile->fileName = $request->input('fileName');
