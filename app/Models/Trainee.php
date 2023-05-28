@@ -31,7 +31,7 @@ class Trainee extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function programs()
+   /* public function programs()
     {
         return $this->belongsToMany(
             Program::class, //related model
@@ -41,6 +41,10 @@ class Trainee extends Model
             'id', //current model key(p.k)
             'id' //related model key(p.k for related model )
         );
+    }*/
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
     }
     public function user()
     {

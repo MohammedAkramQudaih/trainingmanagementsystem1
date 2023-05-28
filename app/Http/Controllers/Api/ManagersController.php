@@ -149,7 +149,6 @@ class ManagersController extends Controller
         Notification::send($trainee,new AcceptedTraineeNotification());
         $user_id = $acceptedTrainee->getAttribute('id');
         $trainee->update(['user_id' => $user_id]);
-
         return $acceptedTrainee;
 
     }
@@ -199,7 +198,7 @@ class ManagersController extends Controller
                 ->where('program_id', '=', $program_id)
                 ->update(['status' => 'Accepted']);
             $trainee = Trainee::find($trainee_id);
-            $trainee->programs()->attach($program_id);
+            $trainee->update(['program_id' => $program_id]);
         }
         return response()->json([
             'message' => $status . " Successfully"

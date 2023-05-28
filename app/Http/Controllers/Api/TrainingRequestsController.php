@@ -30,16 +30,17 @@ class TrainingRequestsController extends Controller
             'trainee_qualifications' => 'required|string'
         ]);
 
+        //to Check if the Trainee Send request for the same
         $checkTrainingRequest = TrainingRequest::find($trainee_id)->where('program_id',$request->program_id);
         if($checkTrainingRequest) {
             return response()->json([
                 'message' => 'The Training Request to this Program Already Sent to the manager...',
-                'Trainging Request' => $checkTrainingRequest
-
+                'Training Request' => $checkTrainingRequest
             ]);
         }
         $trainingRequest = new TrainingRequest();
         $trainingRequest->trainee_id = $trainee_id;
+        $trainingRequest->trainee_qualifications = $request->trainee_qualifications;
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
         return response()->json([

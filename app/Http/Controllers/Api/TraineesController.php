@@ -124,25 +124,37 @@ class TraineesController extends Controller
 
     public function getTraineeInfo()
     {
-        $trainee_id = Auth::user()->trainee->id;
-        $isJointToProgrms = false;
-
-        $trainee = Trainee::withoutTrashed()->find($trainee_id);
-
-        $programsJoint = DB::table('program_trainee')
-            ->where('trainee_id', $trainee_id)
-            ->get();
-        $programs = $trainee->progrms;
-        if($programsJoint) {
-            $isJointToProgrms = true;
-            return response()->json([
-                'Is Joint To Programs' => $isJointToProgrms,
-                'profile' => $trainee,
-                'Programs' => $programs
-            ]);
+        $user = auth()->user();
+        if ($user->trainee) {
+            $trainee = $user->trainee;
+            return response()->json($trainee, 200);
+        } else {
+            return response()->json(['message' => 'User is not an Trainee'], 403);
         }
-        return response()->json([
-            'profile' => $trainee,
-        ]);
+//        $trainee_id = Auth::user()->trainee->id;
+//        $isJointToProgrms = false;
+//
+//        $trainee = Trainee::withoutTrashed()->find($trainee_id);
+//
+//        $programsJoint = DB::table('program_trainee')
+//            ->where('trainee_id', $trainee_id)
+//            ->get();
+//        $programs = $trainee->progrms;
+//        if($programsJoint) {
+//            $isJointToProgrms = true;
+//            return response()->json([
+//                'Is Joint To Programs' => $isJointToProgrms,
+//                'profile' => $trainee,
+//                'Programs' => $programs
+//            ]);
+//        }
+//        return response()->json([
+//            'profile' => $trainee,
+//        ]);
     }
+
+//    public function getJointProgram($trainee_id)
+//    {
+//        $program =
+//    }
 }

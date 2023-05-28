@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -23,6 +23,8 @@ return new class extends Migration
             $table->enum('status', ['Suspended', 'Accepted'])->default('Suspended');
             $table->string('trainee_id')->nullable()->unique()->whereNotNull('trainee_id');
             $table->string('bio');
+            $table->unsignedBigInteger('program_id')->nullable();
+            $table->foreign('program_id')->references('id')->on('programs');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();

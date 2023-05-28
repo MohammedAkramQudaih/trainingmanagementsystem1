@@ -46,16 +46,10 @@ class Program extends Model
             'id' //related model key(p.k for related model )
  */
 
+
     public function trainees()
     {
-        return $this->belongsToMany(
-            Trainee::class,
-            'program_trainee',
-            'program_id',
-            'trainee_id',
-            'id',
-            'id'
-        );
+        return $this->hasMany(Trainee::class);
     }
 
     public function advisor()
