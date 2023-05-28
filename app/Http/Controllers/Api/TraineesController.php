@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TraineesController extends Controller
 {
@@ -59,10 +61,10 @@ class TraineesController extends Controller
         $trainee->university_name = $request->university_name;
         $trainee->university_id = $request->university_id;
         $trainee->gender = $request->gender;
-        $trainee->status = $request->status;
         $trainee->trainee_id = null;
         $trainee->bio = $request->bio;
         $trainee->save();
+        return $trainee;
 
     }
 
@@ -116,19 +118,31 @@ class TraineesController extends Controller
      */
     public function destroy($id)
     {
-        //
         $trainee = Trainee::withoutTrashed()->find($id);
         $trainee->delete();
     }
 
     public function getTraineeInfo()
     {
-        $user = auth()->user();
-        if ($user->trainee) {
-            $trainee = $user->trainee;
-            return response()->json($trainee, 200);
-        } else {
-            return response()->json(['message' => 'User is not an Trainee'], 403);
+        $trainee_id = Auth::user()->trainee->id;
+        $isJointToProgrms = false;
+
+        $trainee = Trainee::withoutTrashed()->find($trainee_id);
+
+        $programsJoint = DB::table('program_trainee')
+            ->where('trainee_id', $trainee_id)
+            ->get();
+        $programs = $trainee->progrms;
+        if($programsJoint) {
+            $isJointToProgrms = true;
+            return response()->json([
+                'Is Joint To Programs' => $isJointToProgrms,
+                'profile' => $trainee,
+                'Programs' => $programs
+            ]);
         }
+        return response()->json([
+            'profile' => $trainee,
+        ]);
     }
 }

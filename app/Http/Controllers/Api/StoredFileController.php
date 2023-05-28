@@ -25,14 +25,14 @@ class StoredFileController extends Controller
      */
     public function store(Request $request)
     {
-
         $request->validate([
             'fileName' => 'required|string',
             'fileUrl' => 'required|string|unique:stored_files,fileUrl',
             'fileType' => 'required|string',
             'fileSize' => 'required|integer',
             'trainee_id' => 'sometimes|integer',
-            'program_id' => 'sometimes|integer'
+            'program_id' => 'sometimes|integer',
+            'notes' => 'nullable|string'
         ]);
         $storedFile = new StoredFile();
         $storedFile->fileName = $request->input('fileName');
@@ -41,6 +41,7 @@ class StoredFileController extends Controller
         $storedFile->fileSize = $request->input('fileSize');
         $storedFile->trainee_id = $request->input('trainee_id') ?? null;
         $storedFile->program_id = $request->input('program_id') ?? null;
+        $storedFile->notes = $request->input('notes');
 
         $storedFile->save();
         return response()->json([

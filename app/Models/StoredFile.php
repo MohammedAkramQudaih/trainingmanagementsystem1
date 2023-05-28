@@ -17,7 +17,8 @@ class StoredFile extends Model
         'fileSize',
         'trainee_id',
         'program_id',
-        'fileUrl'
+        'fileUrl',
+        'notes'
     ];
 
     protected $dates = ['deleted_at'];

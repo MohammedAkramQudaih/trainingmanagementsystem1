@@ -16,7 +16,7 @@ class DisciplinesController extends Controller
     public function index()
     {
         //
-        $disciplines = Discipline::withTrashed()->get();
+        $disciplines = Discipline::withoutTrashed()->get();
         return $disciplines;
     }
 
@@ -68,11 +68,11 @@ class DisciplinesController extends Controller
             'name' => 'sometimes|required|string',
             'description' => 'nullable|string',
         ]);
-
         if ($request->filled('name')) {
             $discipline->name = $request->input('name');
             $discipline->slug = Str::slug($discipline->name);
         }
+        $discipline->description = $request->input('description');
         $discipline->save();
         return response()->json(['message'=>'Successfully discipline updated']);
     }

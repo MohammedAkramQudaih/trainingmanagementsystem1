@@ -8,8 +8,14 @@ use App\Models\Manager;
 use App\Models\Trainee;
 use App\Models\TrainingRequest;
 use App\Models\User;
+use App\Notifications\AcceptedTraineeNotification;
 use Illuminate\Http\Request;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+
 
 class ManagersController extends Controller
 {
@@ -98,6 +104,11 @@ class ManagersController extends Controller
     public function acceptTrainee($id)
     {
         $trainee = Trainee::withoutTrashed()->find($id);
+//        if ($trainee->status == 'Accepted') {
+//            return response()->json(
+//                ['message' => 'The Trainee Already Accepted']
+//            );
+//        }
         do {
             $number = random_int(1000000, 9999999);
         } while (Trainee::where("trainee_id", "=", $number)->first());
@@ -112,9 +123,33 @@ class ManagersController extends Controller
         $acceptedTrainee->password = '$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
         $acceptedTrainee->role = 'trainee';
         $acceptedTrainee->save();
-        //
+        $traineeEmail = $trainee->email;
+
+        $body = 'Dear Trainee,<br><br>Congratulations! You have been accepted in the Training management system.<br>
+                    <br>You can now log in and start using the system.<br>
+                    <br>You can use your Trainee ID to Log in.<br>' . $traineeEmail
+                    . ' <br>and Default Password is: 12345678, please Change it after first login
+                    <br>Thank you for using our system!';
+
+        $emailContent = [
+            'title' => 'Welcome to Training Managment System',
+            'body' => $body,
+        ];
+
+
+//        Mail::send([], [], function ($message) use ($traineeEmail, $acceptedTrainee) {
+//            $message->to($traineeEmail)
+//                ->subject('You have been accepted in the system')
+//                ->setBody('Dear Trainee,<br><br>Congratulations! You have been accepted in the Training management system.<br>
+//                    <br>You can now log in and start using the system.<br>
+//                    <br>You can use your Trainee ID to Log in.<br>' . $traineeEmail
+//                    . ' <br>and Default Password is: 12345678, please Change it after first login
+//                    <br>Thank you for using our system!','text/html');
+//        });
+        Notification::send($trainee,new AcceptedTraineeNotification());
         $user_id = $acceptedTrainee->getAttribute('id');
         $trainee->update(['user_id' => $user_id]);
+
         return $acceptedTrainee;
 
     }

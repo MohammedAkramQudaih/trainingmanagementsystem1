@@ -61,9 +61,30 @@ Route::post('/manager/trainees/{trainee_id}/programs/{program_id}',
     [\App\Http\Controllers\Api\ManagersController::class, 'acceptTrainingRequest'])->middleware('auth:sanctum');
 Route::post('/trainees/attendance', [TraineeAttendanceController::class, 'store'])->middleware('auth:sanctum');
 
-Route::post('/trainees/create-meeting',[\App\Http\Controllers\Api\MeetingsController::class,'store'])->middleware('auth:sanctum');
+Route::get('/manager/show-training-requests',
+    [\App\Http\Controllers\Api\TrainingRequestsController::class,'index'])->middleware('auth:sanctum');
+Route::get('/trainees/show-training-requests/{trainee_id}',
+    [\App\Http\Controllers\Api\TrainingRequestsController::class,'show'])->middleware('auth:sanctum');
+
+
+Route::post('/trainees/create-meeting',
+    [\App\Http\Controllers\Api\MeetingsController::class,'store'])
+    ->middleware('auth:sanctum');
+
+Route::get('/advisor/list-meetings-requests/{',
+    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsAdvisor'])
+    ->middleware('auth:sanctum');
+Route::get('/trainee/list-meetings-requests/',
+    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsTrainee'])
+    ->middleware('auth:sanctum');
+Route::get('/advisor/list-meetings-requests/',
+    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsManager'])
+    ->middleware('auth:sanctum');
+
+
 Route::post('/trainee/apply-program/',
     [\App\Http\Controllers\Api\TrainingRequestsController::class, 'store'])->middleware('auth:sanctum');
+
 Route::get('/trainees/get-files/{trainee_id}',
     [\App\Http\Controllers\Api\StoredFileController::class,'getTraineeFiles'])
     ->middleware('auth:sanctum');

@@ -14,6 +14,7 @@ return new class extends Migration {
 //            $table->unsignedBigInteger('id')->autoIncrement();
             $table->unsignedBigInteger('trainee_id');
             $table->unsignedBigInteger('program_id');
+            $table->string('trainee_qualifications');
             $table->primary(['trainee_id','program_id']);
             $table->enum('status', ['Pending', 'Accepted', 'Rejected'])->default('Pending');
             $table->timestamp('created_at')->useCurrent();

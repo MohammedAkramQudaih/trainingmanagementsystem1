@@ -14,13 +14,8 @@ class TrainingRequestsController extends Controller
      */
     public function index()
     {
-        //
-        $trainingRequests = TrainingRequest::all();
-        return response()->json([
-            'Training Requests' =>
-                $trainingRequests, 200
-        ]);
-
+        $trainingRequests = TrainingRequest::with('trainee', 'program')->get();
+        return response()->json($trainingRequests);
     }
 
     /**
@@ -28,14 +23,23 @@ class TrainingRequestsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-//        return $request;
+        $trainee_id = Auth::user()->trainee->id;
         $request->validate([
 //            'trainee_id' => 'required|exists:users,id',
             'program_id' => 'required|exists:programs,id',
+            'trainee_qualifications' => 'required|string'
         ]);
+
+        $checkTrainingRequest = TrainingRequest::find($trainee_id)->where('program_id',$request->program_id);
+        if($checkTrainingRequest) {
+            return response()->json([
+                'message' => 'The Training Request to this Program Already Sent to the manager...',
+                'Trainging Request' => $checkTrainingRequest
+
+            ]);
+        }
         $trainingRequest = new TrainingRequest();
-        $trainingRequest->trainee_id = Auth::user()->trainee->id;
+        $trainingRequest->trainee_id = $trainee_id;
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
         return response()->json([
@@ -46,9 +50,10 @@ class TrainingRequestsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $trainee_id)
     {
-        //
+        $trainingRequests = TrainingRequest::with('program')->where('trainee_id',$trainee_id)->get();
+        return response()->json($trainingRequests);
     }
 
     /**

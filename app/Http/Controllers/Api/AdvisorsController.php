@@ -19,7 +19,6 @@ class AdvisorsController extends Controller
      */
     public function index()
     {
-        //
         $advisors = Advisor::withoutTrashed()->with('discipline')->get();
         return $advisors;
     }

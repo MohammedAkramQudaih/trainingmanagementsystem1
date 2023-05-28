@@ -12,7 +12,8 @@ class TrainingRequest extends Model
     protected $fillable = [
         'trainee_id',
         'program_id',
-        'status'
+        'status',
+        'trainee_qualifications'
     ];
     public $incrementing = false;
 
@@ -29,5 +30,9 @@ class TrainingRequest extends Model
     public function trainee()
     {
         return $this->belongsTo(Trainee::class);
+    }
+    public function program()
+    {
+        return $this->belongsTo(Program::class);
     }
 }
