@@ -146,7 +146,7 @@ class ManagersController extends Controller
 //                    . ' <br>and Default Password is: 12345678, please Change it after first login
 //                    <br>Thank you for using our system!','text/html');
 //        });
-        Notification::send($trainee,new AcceptedTraineeNotification());
+//        Notification::send($trainee,new AcceptedTraineeNotification());
         $user_id = $acceptedTrainee->getAttribute('id');
         $trainee->update(['user_id' => $user_id]);
         return $acceptedTrainee;
