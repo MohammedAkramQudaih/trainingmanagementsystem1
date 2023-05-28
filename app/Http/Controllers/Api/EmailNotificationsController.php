@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailNotificationsController extends Controller
 {
-    //
     public function send($Email)
     {
         Mail::to($Email)->send(new SendEmailNotification());
