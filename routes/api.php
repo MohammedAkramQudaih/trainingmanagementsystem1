@@ -93,7 +93,7 @@ Route::get('/programs/get-logo/{program_id}',
     [\App\Http\Controllers\Api\StoredFileController::class,'getProgramLogo'])
     ->middleware('auth:sanctum');
 
-Route::post('/advisor/acceptMeeting',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');
+Route::post('/advisor/acceptMeeting/{meeting_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');
 
 Route::get('/advisor/get-meetings/{advisor_id}',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getMeetingsRequests'])
