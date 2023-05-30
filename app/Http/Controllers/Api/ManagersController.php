@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Manager;
+use App\Models\Program;
 use App\Models\Trainee;
 use App\Models\TrainingRequest;
 use App\Models\User;
@@ -200,6 +201,10 @@ class ManagersController extends Controller
 
             $trainee = Trainee::find($trainee_id);
             $trainee->program_id = $program_id;
+
+            $pogram = Program::find($program_id);
+            $trainee->advisor_id = $pogram->advisor_id;
+
             $trainee->save();
         }
         return response()->json([

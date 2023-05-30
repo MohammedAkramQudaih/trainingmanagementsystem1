@@ -45,11 +45,11 @@ class Advisor extends Model
     {
         return $this->hasMany(Program::class);
     }
-    public function trainees($programId)
-    {
-        return $this->belongsToMany(Trainee::class, 'program_trainee')
-            ->wherePivot('program_id', $programId);
-    }
+//    public function trainees($programId)
+//    {
+//        return $this->belongsToMany(Trainee::class, 'program_trainee')
+//            ->wherePivot('program_id', $programId);
+//    }
 //    public function user()
 //    {
 //        return $this->belongsTo(User::class);
@@ -57,5 +57,9 @@ class Advisor extends Model
     public function meetings()
     {
         return $this->hasMany(Meeting::class, 'advisor_id');
+    }
+    public function trainee()
+    {
+        return $this->hasMany(Trainee::class);
     }
 }
