@@ -197,8 +197,10 @@ class ManagersController extends Controller
                 ->where('trainee_id', '=', $trainee_id)
                 ->where('program_id', '=', $program_id)
                 ->update(['status' => 'Accepted']);
+
             $trainee = Trainee::find($trainee_id);
-            $trainee->update(['program_id' => $program_id]);
+            $trainee->program_id = $program_id;
+            $trainee->save();
         }
         return response()->json([
             'message' => $status . " Successfully"
