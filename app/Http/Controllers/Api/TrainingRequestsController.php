@@ -23,16 +23,19 @@ class TrainingRequestsController extends Controller
      */
     public function store(Request $request)
     {
+
         $trainee_id = Auth::user()->trainee->id;
         $request->validate([
-//            'trainee_id' => 'required|exists:users,id',
             'program_id' => 'required|exists:programs,id',
             'trainee_qualifications' => 'required|string'
         ]);
 
+
         //to Check if the Trainee Send request for the same
-        $checkTrainingRequest = TrainingRequest::find($trainee_id)->where('program_id',$request->program_id);
-        if($checkTrainingRequest) {
+        $checkTrainingRequest = TrainingRequest::where('trainee_id', $trainee_id)
+            ->where('program_id', $request->program_id)
+            ->first();
+        if ($checkTrainingRequest) {
             return response()->json([
                 'message' => 'The Training Request to this Program Already Sent to the manager...',
                 'Training Request' => $checkTrainingRequest
@@ -53,7 +56,7 @@ class TrainingRequestsController extends Controller
      */
     public function show(string $trainee_id)
     {
-        $trainingRequests = TrainingRequest::with('program')->where('trainee_id',$trainee_id)->get();
+        $trainingRequests = TrainingRequest::with('program')->where('trainee_id', $trainee_id)->get();
         return response()->json($trainingRequests);
     }
 
