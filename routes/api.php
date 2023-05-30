@@ -105,7 +105,8 @@ Route::get('/advisor/get-programs',
 
 Route::get('/advisor/get-trainees/{program_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllTraineesByProgram'])
     ->middleware('auth:sanctum');;
-
+Route::get('/advisor/list-trainees',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllTraineesByAvisorPograms'])
+    ->middleware('auth:sanctum');;
 
 Route::get('/advisor/profile/',
     [\App\Http\Controllers\Api\AdvisorsController::class, 'getAdvisorInfo'])->middleware('auth:sanctum');

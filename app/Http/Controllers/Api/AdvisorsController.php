@@ -176,4 +176,23 @@ class AdvisorsController extends Controller
         return $trainees;
     }
 
+    public function getAllTraineesByAvisorPograms() {
+        /*
+        $programs = Program::withoutTrashed()->get();
+        for($programs as $program) {
+            $trainees = $program->trainees;
+            return $trainees;
+        }
+        $trainees = $program->trainees;
+        return $trainees;
+        */
+        $advisor_id = Auth::user()->advisor->id;
+        $trainees = DB::table('trainees')
+            ->join('programs', 'trainees.program_id', '=', 'programs.id')
+            ->where('programs.advisor_id', $advisor_id)
+            ->select('trainees.*')
+            ->get();
+        return $trainees;
+
+    }
 }
