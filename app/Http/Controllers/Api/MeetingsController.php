@@ -66,7 +66,7 @@ class MeetingsController extends Controller
         return response()->json($meetings);
     }
     public function getMeetingsManager() {
-        $meetings = Meeting::with(['trainee:name', 'advisor:name'])->get();
+        $meetings = Meeting::with(['trainee', 'advisor'])->get();
         return response()->json($meetings);
     }
 }
