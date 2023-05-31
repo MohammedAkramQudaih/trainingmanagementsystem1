@@ -7,6 +7,7 @@ use App\Models\Advisor;
 use App\Models\Meeting;
 use App\Models\Notification;
 use App\Models\Program;
+use App\Models\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -69,7 +70,7 @@ class AdvisorsController extends Controller
     }
 
     /*
-     //we can use this method inseated of the above
+     //we can use this method instead of the above
     //we pass the model and the laravel specify the id,
     // and use load method to pass several relationships
 
@@ -136,13 +137,16 @@ class AdvisorsController extends Controller
     public function acceptMeeting(Request $request, $meeting_id)
     {
         $notification = new Notification();
-
         $notification->title = "Meeting Request Reply";
         $meeting = Meeting::find($meeting_id);
 
-        $notification->user_id = $meeting->trainee_id;
+        $trainee_id = $meeting->trainee_id;
+        $trainee = Trainee::find($trainee_id);
+        $user_id = $trainee->user_id;
 
-        $advisor = Advisor::find($meeting->trainee_id);
+        $notification->user_id = $user_id;
+
+        $advisor = Advisor::find($meeting->advisor_id);
         $advisorName = $advisor->name;
 
         $status = $request->status;
