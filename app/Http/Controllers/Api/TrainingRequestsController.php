@@ -7,6 +7,7 @@ use App\Models\Manager;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\TrainingRequest;
+use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,23 +59,23 @@ class TrainingRequestsController extends Controller
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
 
-        $notification = new Notification();
-        $notification->title = "New Training Request";
+
 
         $program = Program::find($request->program_id);
         $programName = $program->name;
 
-        $notification->content = "New Training Request to the program: " . $programName;
-        $managers = Manager::where('role','manager')->get();
+        $managers = User::where('role','manager')->get();
 
         foreach ($managers as $manager) {
+            $notification = new Notification();
+            $notification->title = "New Training Request";
+            $notification->content = "New Training Request to the program: " . $programName;
             $notification->user_id = $manager->id;
             $notification->save();
         }
 
         return response()->json([
-            'message' => 'The Training Request send to the manager...'
-        ]);
+            'message' => 'The Training Request send to the manager...']);
     }
 
     /**
