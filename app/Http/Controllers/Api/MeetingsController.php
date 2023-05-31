@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Meeting;
+use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,7 +32,18 @@ class MeetingsController extends Controller
         if ($conflictingMeetings > 0) {
             return response()->json(['error' => 'There is a scheduling conflict for the requested meeting'], 409);
         }
+
+        $notification = new Notification();
+        $notification->title = "New Meeting Request";
+        $notification->user_id = $request->advsor_id;
+
         $trainee_id = Auth::user()->trainee->id;
+        $trainee_name = Auth::user()->trainee->name;
+
+        $notification->content = "New Meeting Request from Trainee: " . $trainee_name .
+            "from " . $request->start_time . " to " . $request->end_time;
+
+
         $meeting = new Meeting();
         $meeting->subject = $validatedData['subject'];
         $meeting->start_time = $validatedData['start_time'];

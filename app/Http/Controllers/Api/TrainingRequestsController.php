@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Notification;
+use App\Models\Program;
 use App\Models\TrainingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,6 @@ class TrainingRequestsController extends Controller
             'trainee_qualifications' => 'required|string'
         ]);
 
-
         //to Check if the Trainee Send request for the same
         $checkTrainingRequest = TrainingRequest::where('trainee_id', $trainee_id)
             ->where('program_id', $request->program_id)
@@ -46,6 +47,16 @@ class TrainingRequestsController extends Controller
         $trainingRequest->trainee_qualifications = $request->trainee_qualifications;
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
+
+        $notification = new Notification();
+        $notification->title = "New Training Request";
+
+        $program = Program::find($request->program_id);
+        $programName = $program->name;
+
+        $notification->content = "New Training Request to the program: " . $programName;
+        $notification;
+
         return response()->json([
             'message' => 'The Training Request send to the manager...'
         ]);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Meeting;
+use App\Models\Notification;
 use App\Models\Program;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -134,15 +135,30 @@ class AdvisorsController extends Controller
 
     public function acceptMeeting(Request $request, $meeting_id)
     {
+        $notification = new Notification();
+
+        $notification->title = "Meeting Request Reply";
         $meeting = Meeting::find($meeting_id);
+
+        $notification->user_id = $meeting->trainee_id;
+
+        $advisor = Advisor::find($meeting->trainee_id);
+        $advisorName = $advisor->name;
+
         $status = $request->status;
+
         if ($status == 'Accepted') {
             $meeting->status = 'Accepted';
+            $notification->content = "The Meeting start in " . $meeting->start_time . ', with the supervisor: ' . $advisorName;
+
         } else if ($status == 'Rejected') {
             $meeting->status = 'Rejected';
+            $notification->content = 'Your Meeting Request has been Rejected in the ' .  $meeting->start_time;
         }
-        return response()->json(['message' => 'Meeting updated successfully', 'meeting' => $meeting], 200);
         $meeting->save();
+        $notification->save();
+        return response()->json(['message' => 'Meeting updated successfully', 'meeting' => $meeting], 200);
+
     }
 
     public function getMeetingsRequests($advisor_id)
@@ -156,7 +172,7 @@ class AdvisorsController extends Controller
                 200);
         } else {
             return response()->json([
-                'message' => 'No Avisor has an id = ' . $advisor_id],
+                'message' => 'No Advisor has an id = ' . $advisor_id],
                 200);
         }
 
@@ -170,13 +186,16 @@ class AdvisorsController extends Controller
         $programs = $advisor->programs;
         return $programs;
     }
-    public function getAllTraineesByProgram($program_id) {
+
+    public function getAllTraineesByProgram($program_id)
+    {
         $program = Program::withoutTrashed()->find($program_id);
         $trainees = $program->trainees;
         return $trainees;
     }
 
-    public function getAllTraineesByAvisorPograms() {
+    public function getAllTraineesByAvisorPograms()
+    {
         /*
         $programs = Program::withoutTrashed()->get();
         for($programs as $program) {

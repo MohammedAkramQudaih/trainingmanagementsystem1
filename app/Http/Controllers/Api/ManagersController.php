@@ -129,7 +129,7 @@ class ManagersController extends Controller
         $body = 'Dear Trainee,<br><br>Congratulations! You have been accepted in the Training management system.<br>
                     <br>You can now log in and start using the system.<br>
                     <br>You can use your Trainee ID to Log in.<br>' . $traineeEmail
-                    . ' <br>and Default Password is: 12345678, please Change it after first login
+            . ' <br>and Default Password is: 12345678, please Change it after first login
                     <br>Thank you for using our system!';
 
         $emailContent = [
@@ -185,28 +185,39 @@ class ManagersController extends Controller
             ->where('trainee_id', '=', $trainee_id)
             ->where('program_id', '=', $program_id)
             ->get();
-//        return $trainingRequest;
         $status = $request->status;
-//        return $status;
+
+        $notification = new \App\Models\Notification();
+
+        $program = Program::find($program_id);
+        $programName = $program->title;
+
+        $advisor = Advisor::find($program->advisor_id);
+        $advisorName = $advisor->name;
+
+        $notification->title = "Training Request Reply";
         if ($status == 'Rejected') {
             DB::table('training_requests')
                 ->where('trainee_id', '=', $trainee_id)
                 ->where('program_id', '=', $program_id)
                 ->update(['status' => 'Rejected']);
+            $notification->content = "Your Training Request has been Rejected in the Program: " . $programName;
         } else if ($status == 'Accepted') {
             DB::table('training_requests')
                 ->where('trainee_id', '=', $trainee_id)
                 ->where('program_id', '=', $program_id)
                 ->update(['status' => 'Accepted']);
-
             $trainee = Trainee::find($trainee_id);
             $trainee->program_id = $program_id;
 
             $pogram = Program::find($program_id);
             $trainee->advisor_id = $pogram->advisor_id;
-
             $trainee->save();
+
+            $notification->content = "Your Training Request has been Accepted in the Program: " . $programName . " now You can registering the attendance and create meetings with Your Advisor: " . $advisorName;
         }
+        $notification->user_id = $trainee_id;
+        $notification->save();
         return response()->json([
             'message' => $status . " Successfully"
         ]);
