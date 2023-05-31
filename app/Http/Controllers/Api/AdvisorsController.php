@@ -157,7 +157,7 @@ class AdvisorsController extends Controller
 
         } else if ($status == 'Rejected') {
             $meeting->status = 'Rejected';
-            $notification->content = 'Your Meeting Request has been Rejected in the ' .  $meeting->start_time;
+            $notification->content = 'Your Meeting Request has been Rejected in the ' . $meeting->start_time;
         }
         $meeting->save();
         $notification->save();
@@ -170,7 +170,8 @@ class AdvisorsController extends Controller
         $advisor = Advisor::find($advisor_id);
 
         if ($advisor) {
-            $meetings = $advisor->meetings;
+            $meetings = Meeting::with('trainee')->where('advisor_id', $advisor_id)->get();
+
             return response()->json([
                 'meetings' => $meetings],
                 200);
@@ -178,9 +179,8 @@ class AdvisorsController extends Controller
             return response()->json([
                 'message' => 'No Advisor has an id = ' . $advisor_id],
                 400);
+
         }
-
-
     }
 
     public function getAllPrograms($advisor_id)

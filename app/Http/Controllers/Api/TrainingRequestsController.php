@@ -47,7 +47,8 @@ class TrainingRequestsController extends Controller
         if ($checkTrainingRequest) {
             return response()->json([
                 'message' => 'The Training Request to this Program Already Sent to the manager...',
-                'Training Request' => $checkTrainingRequest
+                'Training Request' => $checkTrainingRequest,
+                400
             ]);
         }
 

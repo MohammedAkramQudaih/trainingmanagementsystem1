@@ -56,17 +56,21 @@ class MeetingsController extends Controller
         return response()->json(['message' => 'Meeting created successfully', 'meeting' => $meeting], 201);
     }
 
-    public function getMeetingsAdvisor() {
-        $advisor_id = Auth::user()->advisor->id;
-        $meetings = Meeting::where('advisor_id',$advisor_id)->get();
-        return response()->json($meetings);
-    }
-    public function getMeetingsTrainee() {
+    //    public function getMeetingsAdvisor() {
+    //        $advisor_id = Auth::user()->advisor->id;
+    //        $meetings = Meeting::where('advisor_id',$advisor_id)->get();
+    //        return response()->json($meetings);
+    //    }
+    public function getMeetingsTrainee()
+    {
         $trainee_id = Auth::user()->trainee->id;
-        $meetings = Meeting::where('trainee_id',$trainee_id)->get();
+        $meetings = Meeting::with('advisor')->where('trainee_id', $trainee_id)->get();
+
         return response()->json($meetings);
     }
-    public function getMeetingsManager() {
+
+    public function getMeetingsManager()
+    {
         $meetings = Meeting::with(['trainee', 'advisor'])->get();
         return response()->json($meetings);
     }
