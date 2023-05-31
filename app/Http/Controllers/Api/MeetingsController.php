@@ -35,13 +35,14 @@ class MeetingsController extends Controller
 
         $notification = new Notification();
         $notification->title = "New Meeting Request";
-        $notification->user_id = $request->advsor_id;
 
         $trainee_id = Auth::user()->trainee->id;
         $trainee_name = Auth::user()->trainee->name;
 
         $notification->content = "New Meeting Request from Trainee: " . $trainee_name .
             "from " . $request->start_time . " to " . $request->end_time;
+
+        $notification->user_id = $request->advisor_id;
 
 
         $meeting = new Meeting();
