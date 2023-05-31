@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manager;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\TrainingRequest;
@@ -32,16 +33,25 @@ class TrainingRequestsController extends Controller
             'trainee_qualifications' => 'required|string'
         ]);
 
+        if($program_field) {
+            return response()->json([
+                'message' => 'You Are Already Joined to Program',
+            ]);
+        }
+
         //to Check if the Trainee Send request for the same
         $checkTrainingRequest = TrainingRequest::where('trainee_id', $trainee_id)
             ->where('program_id', $request->program_id)
             ->first();
+
         if ($checkTrainingRequest) {
             return response()->json([
                 'message' => 'The Training Request to this Program Already Sent to the manager...',
                 'Training Request' => $checkTrainingRequest
             ]);
         }
+        $program_field = Auth::user()->trainee->program_id;
+
         $trainingRequest = new TrainingRequest();
         $trainingRequest->trainee_id = $trainee_id;
         $trainingRequest->trainee_qualifications = $request->trainee_qualifications;
@@ -55,7 +65,12 @@ class TrainingRequestsController extends Controller
         $programName = $program->name;
 
         $notification->content = "New Training Request to the program: " . $programName;
-        $notification;
+        $managerIDs = Manager::pluck('manager_id');
+
+        foreach ($managerIDs as $managerID) {
+            $notification->user_id = $managerID;
+            $notification->save();
+        }
 
         return response()->json([
             'message' => 'The Training Request send to the manager...'
