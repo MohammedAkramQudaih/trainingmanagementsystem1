@@ -51,6 +51,7 @@ class MeetingsController extends Controller
         $meeting->advisor_id = $validatedData['advisor_id'];
         $meeting->trainee_id = $trainee_id;
         $meeting->save($validatedData);
+        $notification->save();
         return response()->json(['message' => 'Meeting created successfully', 'meeting' => $meeting], 201);
     }
 
