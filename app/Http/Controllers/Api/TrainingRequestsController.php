@@ -32,7 +32,7 @@ class TrainingRequestsController extends Controller
             'program_id' => 'required|exists:programs,id',
             'trainee_qualifications' => 'required|string'
         ]);
-
+        $program_field = Auth::user()->trainee->program_id;
         if($program_field) {
             return response()->json([
                 'message' => 'You Are Already Joined to Program',
@@ -50,7 +50,6 @@ class TrainingRequestsController extends Controller
                 'Training Request' => $checkTrainingRequest
             ]);
         }
-        $program_field = Auth::user()->trainee->program_id;
 
         $trainingRequest = new TrainingRequest();
         $trainingRequest->trainee_id = $trainee_id;

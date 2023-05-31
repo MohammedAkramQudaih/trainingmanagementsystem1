@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'title',
         'content',
@@ -15,6 +16,8 @@ class Notification extends Model
         'created_at'
     ];
 
+
+    public $timestamps = false;
 
     public function user()
     {

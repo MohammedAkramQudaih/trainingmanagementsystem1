@@ -71,9 +71,9 @@ Route::post('/trainees/create-meeting',
     [\App\Http\Controllers\Api\MeetingsController::class,'store'])
     ->middleware('auth:sanctum');
 
-Route::get('/advisor/list-meetings-requests/{',
-    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsAdvisor'])
-    ->middleware('auth:sanctum');
+//Route::get('/advisor/list-meetings-requests/{',
+//    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsAdvisor'])
+//    ->middleware('auth:sanctum');
 Route::get('/trainee/list-meetings-requests/',
     [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsTrainee'])
     ->middleware('auth:sanctum');
