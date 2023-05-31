@@ -99,7 +99,7 @@ Route::get('/advisor/get-meetings/{advisor_id}',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getMeetingsRequests'])
     ->middleware('auth:sanctum');
 
-Route::get('/advisor/get-programs',
+Route::get('/advisor/get-programs/{advisor_id}',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getAllPrograms'])
     ->middleware('auth:sanctum');
 

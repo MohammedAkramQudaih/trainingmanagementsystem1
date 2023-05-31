@@ -64,7 +64,24 @@ class StoredFileController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'fileUrl' => 'sometimes|string|unique:stored_files,fileUrl',
+            'fileType' => 'sometimes|string',
+            'fileSize' => 'sometimes|integer',
+            'notes' => 'nullable|string'
+        ]);
+
+        $storedFile = StoredFile::find($id);
+        $storedFile->fileUrl = $request->input('fileUrl');
+        $storedFile->fileType = $request->input('fileType');
+        $storedFile->fileSize = $request->input('fileSize');
+        $storedFile->notes = $request->input('notes');
+
+        $storedFile->save();
+        return response()->json([
+            'File' => $storedFile,
+            'message' => 'The File has been updated successfully'
+        ]);
     }
 
     /**

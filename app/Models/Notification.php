@@ -16,7 +16,6 @@ class Notification extends Model
         'created_at'
     ];
 
-
     public $timestamps = false;
 
     public function user()

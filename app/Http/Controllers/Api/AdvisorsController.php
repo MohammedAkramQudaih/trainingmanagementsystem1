@@ -179,9 +179,9 @@ class AdvisorsController extends Controller
 
     }
 
-    public function getAllPrograms()
+    public function getAllPrograms($advisor_id)
     {
-        $advisor_id = Auth::user()->advisor->id;
+//        $advisor_id = Auth::user()->advisor->id;
         $advisor = Advisor::find($advisor_id);
         $programs = $advisor->programs;
         return $programs;
