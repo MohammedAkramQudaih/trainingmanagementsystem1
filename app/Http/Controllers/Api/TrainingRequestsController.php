@@ -64,10 +64,10 @@ class TrainingRequestsController extends Controller
         $programName = $program->name;
 
         $notification->content = "New Training Request to the program: " . $programName;
-        $managerIDs = Manager::pluck('manager_id');
+        $managers = Manager::where('role','manager')->get();
 
-        foreach ($managerIDs as $managerID) {
-            $notification->user_id = $managerID;
+        foreach ($managers as $manager) {
+            $notification->user_id = $manager->id;
             $notification->save();
         }
 

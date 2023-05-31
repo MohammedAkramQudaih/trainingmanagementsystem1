@@ -177,7 +177,7 @@ class AdvisorsController extends Controller
         } else {
             return response()->json([
                 'message' => 'No Advisor has an id = ' . $advisor_id],
-                200);
+                400);
         }
 
 
