@@ -91,6 +91,7 @@ class AuthController extends Controller
             ], 201);
         } catch (Exception $e) {
             DB::rollBack();
+            return  response()->json(["Error",401]);
         }
 
     }
@@ -131,8 +132,11 @@ class AuthController extends Controller
                 'trainee_id' => ['The provided credentials are incorrect.'],
             ]);
         }
+        $traineeObj = Advisor::where('user_id',$trainee->id)->first();
+        $traineeId = $traineeObj->id;
         return response()->json([
             'trainee' => $trainee,
+            'trainee_id' => $traineeId,
             'token' => $trainee->createToken('mobile', ['role:trainee'])->plainTextToken
         ]);
     }
@@ -155,7 +159,7 @@ class AuthController extends Controller
     }
 /*
  * "message": "Property [id] does not exist on the Eloquent builder instance.",
-    "exception": "Exception",
+    "exception":"Exception",
  */
     public function managerLogin(Request $request)
     {

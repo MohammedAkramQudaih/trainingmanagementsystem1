@@ -147,6 +147,7 @@ public function acceptTrainee($id)
             ->subject('Welcome to Training Management System');
     });
 
+
     $user_id = $acceptedTrainee->getAttribute('id');
     $trainee->update(['user_id' => $user_id]);
     return $acceptedTrainee;
@@ -204,7 +205,6 @@ public function acceptTrainee($id)
             'message' => $status . " Successfully"
         ]);
     }
-
 
     function getAdvisorsByDisciplinesId($discipline_id)
     {

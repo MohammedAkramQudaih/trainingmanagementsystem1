@@ -7,7 +7,7 @@ use App\Models\Manager;
 use App\Models\Notification;
 use App\Models\Program;
 use App\Models\TrainingRequest;
-use http\Client\Curl\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
