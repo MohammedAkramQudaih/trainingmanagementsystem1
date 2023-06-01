@@ -59,8 +59,6 @@ class TrainingRequestsController extends Controller
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
 
-
-
         $program = Program::find($request->program_id);
         $programName = $program->name;
 
