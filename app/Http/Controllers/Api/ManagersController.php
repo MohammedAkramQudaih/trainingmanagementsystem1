@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
+use Illuminate\Mail\MailMessage;
+
+use App\Mail\TraineeAccepted;
+
+
 
 class ManagersController extends Controller
 {
@@ -101,57 +106,51 @@ class ManagersController extends Controller
         return response()->json(['message' => 'The Manager Successfully deleted']);
     }
 
-    public function acceptTrainee($id)
-    {
-        $trainee = Trainee::withoutTrashed()->find($id);
-//        if ($trainee->status == 'Accepted') {
-//            return response()->json(
-//                ['message' => 'The Trainee Already Accepted']
-//            );
-//        }
-        do {
-            $number = random_int(1000000, 9999999);
-        } while (Trainee::where("trainee_id", "=", $number)->first());
-        $trainee->update(['trainee_id' => $number]);
-        $trainee->update(['status' => 'Accepted']);
 
-        $acceptedTrainee = new User();
-        $acceptedTrainee->name = $trainee->name;
-        $acceptedTrainee->email = $trainee->email;
-        $acceptedTrainee->trainee_id = $number;
-        //default password for new accepted trainee it's from 1 to 8
-        $acceptedTrainee->password = '$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
-        $acceptedTrainee->role = 'trainee';
-        $acceptedTrainee->save();
-        $traineeEmail = $trainee->email;
+/************************************************************************************************ MOHAMMED QUDAIH CODE */
+public function acceptTrainee($id)
+{
+    $trainee = Trainee::withoutTrashed()->find($id);
 
-        $body = 'Dear Trainee,<br><br>Congratulations! You have been accepted in the Training management system.<br>
-                    <br>You can now log in and start using the system.<br>
-                    <br>You can use your Trainee ID to Log in.<br>' . $traineeEmail
-                    . ' <br>and Default Password is: 12345678, please Change it after first login
-                    <br>Thank you for using our system!';
+    do {
+        $number = random_int(1000000, 9999999);
+    } while (Trainee::where("trainee_id", "=", $number)->first());
+    $trainee->update(['trainee_id' => $number]);
+    $trainee->update(['status' => 'Accepted']);
 
-        $emailContent = [
-            'title' => 'Welcome to Training Managment System',
-            'body' => $body,
-        ];
+    $acceptedTrainee = new User();
+    $acceptedTrainee->name = $trainee->name;
+    $acceptedTrainee->email = $trainee->email;
+    $acceptedTrainee->trainee_id = $number;
+    //default password for new accepted trainee it's from 1 to 8
+    $acceptedTrainee->password = '$2y$10$S0aoiOgiKM1wD2BuAoqKcenF8aWc.Vu3EwLdKsaVD3s13NLg8Yvi.';
+    $acceptedTrainee->role = 'trainee';
+    $acceptedTrainee->save();
+    $traineeEmail = $trainee->email;
 
+    $body = 'Dear Trainee,' . PHP_EOL . PHP_EOL .
+        'Congratulations! You have been accepted in the Training management system.' . PHP_EOL .
+        PHP_EOL . 'You can now log in and start using the system.' . PHP_EOL .
+        PHP_EOL . 'You can use your Trainee ID to Log in: ' . $traineeEmail .
+        PHP_EOL . 'and Default Password is: 12345678, please change it after first login.' . PHP_EOL .
+        PHP_EOL . 'Thank you for using our system!';
 
-//        Mail::send([], [], function ($message) use ($traineeEmail, $acceptedTrainee) {
-//            $message->to($traineeEmail)
-//                ->subject('You have been accepted in the system')
-//                ->setBody('Dear Trainee,<br><br>Congratulations! You have been accepted in the Training management system.<br>
-//                    <br>You can now log in and start using the system.<br>
-//                    <br>You can use your Trainee ID to Log in.<br>' . $traineeEmail
-//                    . ' <br>and Default Password is: 12345678, please Change it after first login
-//                    <br>Thank you for using our system!','text/html');
-//        });
-//        Notification::send($trainee,new AcceptedTraineeNotification());
-        $user_id = $acceptedTrainee->getAttribute('id');
-        $trainee->update(['user_id' => $user_id]);
-        return $acceptedTrainee;
+    $emailContent = [
+        'title' => 'Welcome to Training Management System',
+        'body' => $body,
+    ];
 
-    }
+    // Send email
+    Mail::raw($emailContent['body'], function ($message) use ($trainee) {
+        $message->to($trainee->email)
+            ->subject('Welcome to Training Management System');
+    });
+
+    $user_id = $acceptedTrainee->getAttribute('id');
+    $trainee->update(['user_id' => $user_id]);
+    return $acceptedTrainee;
+}
+    /****************************************************************************************** MOHAMMED QUDAIH CODE  */
 
     public function listAllTrainees()
     {
