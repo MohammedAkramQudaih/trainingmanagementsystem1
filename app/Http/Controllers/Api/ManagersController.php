@@ -131,7 +131,7 @@ public function acceptTrainee($id)
     $body = 'Dear Trainee,' . PHP_EOL . PHP_EOL .
         'Congratulations! You have been accepted in the Training management system.' . PHP_EOL .
         PHP_EOL . 'You can now log in and start using the system.' . PHP_EOL .
-        PHP_EOL . 'You can use your Trainee ID to Log in: ' . $traineeEmail .
+        PHP_EOL . 'You can use your Trainee ID to Log in: ' .
         PHP_EOL . 'Trainee ID to is: ' . $trainee->trainee_id .
 //        PHP_EOL . 'and Default Password is: 12345678, please change it after first login.' . PHP_EOL .
         PHP_EOL . 'Thank you for using our system!';
