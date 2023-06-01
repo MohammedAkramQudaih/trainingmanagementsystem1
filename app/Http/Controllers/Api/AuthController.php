@@ -91,7 +91,7 @@ class AuthController extends Controller
             ], 201);
         } catch (Exception $e) {
             DB::rollBack();
-            return  response()->json(["Error",401]);
+            return response()->json(["Error", 401]);
         }
 
     }
@@ -124,15 +124,14 @@ class AuthController extends Controller
     */
     public function traineeLogin(Request $request)
     {
-//        return $request;
         $trainee = User::where('trainee_id', $request->trainee_id)->first();
-
-        if (!$trainee || !Hash::check($request->password, $trainee->password) || $trainee->role !== 'trainee') {
+//!Hash::check($request->password, $trainee->password) ||
+        if (!$trainee || $trainee->role !== 'trainee') {
             throw ValidationException::withMessages([
                 'trainee_id' => ['The provided credentials are incorrect.'],
             ]);
         }
-        $traineeObj = Advisor::where('user_id',$trainee->id)->first();
+        $traineeObj = Advisor::where('user_id', $trainee->id)->first();
         $traineeId = $traineeObj->id;
         return response()->json([
             'trainee' => $trainee,
@@ -149,7 +148,7 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        $advisorObj = Advisor::where('user_id',$advisor->id)->first();
+        $advisorObj = Advisor::where('user_id', $advisor->id)->first();
         $advisorId = $advisorObj->id;
         return response()->json([
             'advisor' => $advisor,
@@ -157,10 +156,11 @@ class AuthController extends Controller
             'token' => $advisor->createToken('mobile', ['role:advisor'])->plainTextToken
         ]);
     }
-/*
- * "message": "Property [id] does not exist on the Eloquent builder instance.",
-    "exception":"Exception",
- */
+
+    /*
+     * "message": "Property [id] does not exist on the Eloquent builder instance.",
+        "exception":"Exception",
+     */
     public function managerLogin(Request $request)
     {
         $manager = User::where('email', $request->email)->first();
