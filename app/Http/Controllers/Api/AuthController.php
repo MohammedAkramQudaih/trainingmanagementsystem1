@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Manager;
+use App\Models\Trainee;
 use Exception;
 use http\Env\Response;
 use Illuminate\Http\Request;
@@ -131,7 +132,7 @@ class AuthController extends Controller
                 'trainee_id' => ['The provided credentials are incorrect.'],
             ]);
         }
-        $traineeObj = Advisor::where('user_id', $trainee->id)->first();
+        $traineeObj = Trainee::where('user_id', $trainee->id)->first();
         $traineeId = $traineeObj->id;
         return response()->json([
             'trainee' => $trainee,
