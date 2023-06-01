@@ -46,6 +46,11 @@ class Trainee extends Model
     {
         return $this->belongsTo(Program::class);
     }
+
+    public function advisor()
+    {
+        return $this->belongsTo(Advisor::class);
+    }
     public function user()
     {
         return $this->belongsTo(User::  class);

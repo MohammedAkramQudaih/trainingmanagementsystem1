@@ -145,12 +145,18 @@ class AuthController extends Controller
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+        $advisorObj = Advisor::where('user_id',$advisor->id)->first();
+        $advisorId = $advisorObj->id;
         return response()->json([
             'advisor' => $advisor,
+            'advisor_id' => $advisorId,
             'token' => $advisor->createToken('mobile', ['role:advisor'])->plainTextToken
         ]);
     }
-
+/*
+ * "message": "Property [id] does not exist on the Eloquent builder instance.",
+    "exception": "Exception",
+ */
     public function managerLogin(Request $request)
     {
         $manager = User::where('email', $request->email)->first();

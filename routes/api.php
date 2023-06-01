@@ -71,9 +71,9 @@ Route::post('/trainees/create-meeting',
     [\App\Http\Controllers\Api\MeetingsController::class,'store'])
     ->middleware('auth:sanctum');
 
-Route::get('/advisor/list-meetings-requests/{',
-    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsAdvisor'])
-    ->middleware('auth:sanctum');
+//Route::get('/advisor/list-meetings-requests/{',
+//    [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsAdvisor'])
+//    ->middleware('auth:sanctum');
 Route::get('/trainee/list-meetings-requests/',
     [\App\Http\Controllers\Api\MeetingsController::class,'getMeetingsTrainee'])
     ->middleware('auth:sanctum');
@@ -93,19 +93,20 @@ Route::get('/programs/get-logo/{program_id}',
     [\App\Http\Controllers\Api\StoredFileController::class,'getProgramLogo'])
     ->middleware('auth:sanctum');
 
-Route::post('/advisor/acceptMeeting',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');
+Route::post('/advisor/acceptMeeting/{meeting_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'acceptMeeting'])->middleware('auth:sanctum');
 
 Route::get('/advisor/get-meetings/{advisor_id}',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getMeetingsRequests'])
     ->middleware('auth:sanctum');
 
-Route::get('/advisor/get-programs',
+Route::get('/advisor/get-programs/{advisor_id}',
     [\App\Http\Controllers\Api\AdvisorsController::class,'getAllPrograms'])
     ->middleware('auth:sanctum');
 
 Route::get('/advisor/get-trainees/{program_id}',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllTraineesByProgram'])
     ->middleware('auth:sanctum');;
-
+Route::get('/advisor/list-trainees',[\App\Http\Controllers\Api\AdvisorsController::class,'getAllTraineesByAvisorPograms'])
+    ->middleware('auth:sanctum');;
 
 Route::get('/advisor/profile/',
     [\App\Http\Controllers\Api\AdvisorsController::class, 'getAdvisorInfo'])->middleware('auth:sanctum');

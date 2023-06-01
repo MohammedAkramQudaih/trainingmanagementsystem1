@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Meeting;
+use App\Models\Notification;
 use App\Models\Program;
+use App\Models\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -68,7 +70,7 @@ class AdvisorsController extends Controller
     }
 
     /*
-     //we can use this method inseated of the above
+     //we can use this method instead of the above
     //we pass the model and the laravel specify the id,
     // and use load method to pass several relationships
 
@@ -134,15 +136,33 @@ class AdvisorsController extends Controller
 
     public function acceptMeeting(Request $request, $meeting_id)
     {
+        $notification = new Notification();
+        $notification->title = "Meeting Request Reply";
         $meeting = Meeting::find($meeting_id);
+
+        $trainee_id = $meeting->trainee_id;
+        $trainee = Trainee::find($trainee_id);
+        $user_id = $trainee->user_id;
+
+        $notification->user_id = $user_id;
+
+        $advisor = Advisor::find($meeting->advisor_id);
+        $advisorName = $advisor->name;
+
         $status = $request->status;
+
         if ($status == 'Accepted') {
             $meeting->status = 'Accepted';
+            $notification->content = "The Meeting start in " . $meeting->start_time . ', with the supervisor: ' . $advisorName;
+
         } else if ($status == 'Rejected') {
             $meeting->status = 'Rejected';
+            $notification->content = 'Your Meeting Request has been Rejected in the ' . $meeting->start_time;
         }
-        return response()->json(['message' => 'Meeting updated successfully', 'meeting' => $meeting], 200);
         $meeting->save();
+        $notification->save();
+        return response()->json(['message' => 'Meeting updated successfully', 'meeting' => $meeting], 200);
+
     }
 
     public function getMeetingsRequests($advisor_id)
@@ -150,30 +170,52 @@ class AdvisorsController extends Controller
         $advisor = Advisor::find($advisor_id);
 
         if ($advisor) {
-            $meetings = $advisor->meetings;
+            $meetings = Meeting::with('trainee')->where('advisor_id', $advisor_id)->get();
+
             return response()->json([
                 'meetings' => $meetings],
                 200);
         } else {
             return response()->json([
-                'message' => 'No Avisor has an id = ' . $advisor_id],
-                200);
+                'message' => 'No Advisor has an id = ' . $advisor_id],
+                400);
+
         }
-
-
     }
 
-    public function getAllPrograms()
+    public function getAllPrograms($advisor_id)
     {
-        $advisor_id = Auth::user()->advisor->id;
+//        $advisor_id = Auth::user()->advisor->id;
         $advisor = Advisor::find($advisor_id);
         $programs = $advisor->programs;
         return $programs;
     }
-    public function getAllTraineesByProgram($program_id) {
+
+    public function getAllTraineesByProgram($program_id)
+    {
         $program = Program::withoutTrashed()->find($program_id);
         $trainees = $program->trainees;
         return $trainees;
     }
 
+    public function getAllTraineesByAvisorPograms()
+    {
+        /*
+        $programs = Program::withoutTrashed()->get();
+        for($programs as $program) {
+            $trainees = $program->trainees;
+            return $trainees;
+        }
+        $trainees = $program->trainees;
+        return $trainees;
+        */
+        $advisor_id = Auth::user()->advisor->id;
+        $trainees = DB::table('trainees')
+            ->join('programs', 'trainees.program_id', '=', 'programs.id')
+            ->where('programs.advisor_id', $advisor_id)
+            ->select('trainees.*')
+            ->get();
+        return $trainees;
+
+    }
 }

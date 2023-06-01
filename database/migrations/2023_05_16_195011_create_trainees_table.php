@@ -25,6 +25,8 @@ return new class extends Migration {
             $table->string('bio');
             $table->unsignedBigInteger('program_id')->nullable();
             $table->foreign('program_id')->references('id')->on('programs');
+            $table->unsignedBigInteger('advisor_id')->nullable();
+            $table->foreign('advisor_id')->references('id')->on('advisors');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->softDeletes();

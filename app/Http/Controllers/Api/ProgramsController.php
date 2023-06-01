@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Advisor;
+use App\Models\Notification;
 use App\Models\Program;
 use Illuminate\Http\Request;
 
@@ -30,7 +32,6 @@ class ProgramsController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
             'title' => 'required|string',
             'description' => 'nullable|string',
@@ -41,7 +42,15 @@ class ProgramsController extends Controller
             'company' => 'required|string',
         ]);
         $program = Program::create($request->all());
-//        return $program;
+
+        $advisor = Advisor::find($request->advisor_id);
+        $advisor_id = $advisor->user_id;
+
+        $notification = new Notification();
+        $notification->title = " Assigned to Program";
+        $notification->content = "Your Assigned to Program :" . $request->title;
+        $notification->user_id = $advisor_id;
+        $notification->save();
         return response()->json($program, 201);
     }
 
@@ -68,6 +77,7 @@ class ProgramsController extends Controller
             'capacity' => 'sometimes|required|integer',
             'company' => 'sometimes|required|string',
         ]);
+
 
         $program->update($request->all());
         return response()->json(

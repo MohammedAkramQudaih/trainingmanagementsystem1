@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manager;
+use App\Models\Notification;
+use App\Models\Program;
 use App\Models\TrainingRequest;
+use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,29 +27,55 @@ class TrainingRequestsController extends Controller
      */
     public function store(Request $request)
     {
+
         $trainee_id = Auth::user()->trainee->id;
         $request->validate([
-//            'trainee_id' => 'required|exists:users,id',
             'program_id' => 'required|exists:programs,id',
             'trainee_qualifications' => 'required|string'
         ]);
-
-        //to Check if the Trainee Send request for the same
-        $checkTrainingRequest = TrainingRequest::find($trainee_id)->where('program_id',$request->program_id);
-        if($checkTrainingRequest) {
+        $program_field = Auth::user()->trainee->program_id;
+        if($program_field) {
             return response()->json([
-                'message' => 'The Training Request to this Program Already Sent to the manager...',
-                'Training Request' => $checkTrainingRequest
+                'message' => 'You Are Already Joined to Program',
             ]);
         }
+
+        //to Check if the Trainee Send request for the same
+        $checkTrainingRequest = TrainingRequest::where('trainee_id', $trainee_id)
+            ->where('program_id', $request->program_id)
+            ->first();
+
+        if ($checkTrainingRequest) {
+            return response()->json([
+                'message' => 'The Training Request to this Program Already Sent to the manager...',
+                'Training Request' => $checkTrainingRequest,
+                400
+            ]);
+        }
+
         $trainingRequest = new TrainingRequest();
         $trainingRequest->trainee_id = $trainee_id;
         $trainingRequest->trainee_qualifications = $request->trainee_qualifications;
         $trainingRequest->program_id = $request->program_id;
         $trainingRequest->save();
+
+
+
+        $program = Program::find($request->program_id);
+        $programName = $program->name;
+
+        $managers = User::where('role','manager')->get();
+
+        foreach ($managers as $manager) {
+            $notification = new Notification();
+            $notification->title = "New Training Request";
+            $notification->content = "New Training Request to the program: " . $programName;
+            $notification->user_id = $manager->id;
+            $notification->save();
+        }
+
         return response()->json([
-            'message' => 'The Training Request send to the manager...'
-        ]);
+            'message' => 'The Training Request send to the manager...']);
     }
 
     /**
@@ -53,7 +83,7 @@ class TrainingRequestsController extends Controller
      */
     public function show(string $trainee_id)
     {
-        $trainingRequests = TrainingRequest::with('program')->where('trainee_id',$trainee_id)->get();
+        $trainingRequests = TrainingRequest::with('program')->where('trainee_id', $trainee_id)->get();
         return response()->json($trainingRequests);
     }
 
