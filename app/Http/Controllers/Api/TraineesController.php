@@ -76,7 +76,6 @@ class TraineesController extends Controller
      */
     public function show($id)
     {
-        //
         return Trainee::withoutTrashed()->find($id);
     }
 
@@ -157,4 +156,10 @@ class TraineesController extends Controller
 //    {
 //        $program =
 //    }
+    public function paying()
+    {
+        $trainee_id = Auth::user()->trainee->id;
+        $trainee = Trainee::find($trainee_id);
+        $trainee->update(['isPayed' => 'True']);
+    }
 }

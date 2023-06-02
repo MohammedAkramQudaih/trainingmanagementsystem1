@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->enum('status', ['Suspended', 'Accepted'])->default('Suspended');
             $table->string('trainee_id')->nullable()->unique()->whereNotNull('trainee_id');
             $table->string('bio');
+            $table->enum('isPayed', ['True', 'False'])->default('False');
             $table->unsignedBigInteger('program_id')->nullable();
             $table->foreign('program_id')->references('id')->on('programs');
             $table->unsignedBigInteger('advisor_id')->nullable();

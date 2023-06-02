@@ -50,7 +50,7 @@ Route::apiResource(
 Route::apiResource(
     'notifications',
     \App\Http\Controllers\Api\NotificationsController::class
-)->middleware('auth:sanctum');;
+)->middleware('auth:sanctum');
 
 Route::post('/manager/accept-trainee/{id}',
     [\App\Http\Controllers\Api\ManagersController::class, 'acceptTrainee'])->middleware('auth:sanctum');
@@ -69,6 +69,10 @@ Route::get('/trainees/show-training-requests/{trainee_id}',
 
 Route::post('/trainees/create-meeting',
     [\App\Http\Controllers\Api\MeetingsController::class,'store'])
+    ->middleware('auth:sanctum');
+
+Route::post('/trainees/payment',
+    [\App\Http\Controllers\Api\TraineesController::class,'paying'])
     ->middleware('auth:sanctum');
 
 //Route::get('/advisor/list-meetings-requests/{',
