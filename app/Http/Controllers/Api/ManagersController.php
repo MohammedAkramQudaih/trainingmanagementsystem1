@@ -201,7 +201,7 @@ public function acceptTrainee($id)
             $trainee = Trainee::find($trainee_id);
             $trainee->program_id = $program_id;
             $trainee->update(['program_id' => $program_id]);
-            $trainee->update(['$advisor_id' => $advisor_id]);
+            $trainee->update(['advisor_id' => $advisor_id]);
         }
         return response()->json([
             'message' => $status . " Successfully"
