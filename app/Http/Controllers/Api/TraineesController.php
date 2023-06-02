@@ -160,6 +160,7 @@ class TraineesController extends Controller
     {
         $trainee_id = Auth::user()->trainee->id;
         $trainee = Trainee::find($trainee_id);
-        $trainee->update(['isPayed' => 'True']);
+        $trainee->isPayed = "True";
+        $trainee->save();
     }
 }
