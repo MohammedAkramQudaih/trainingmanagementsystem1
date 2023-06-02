@@ -22,7 +22,10 @@ class Trainee extends Model
         'status',
         'trainee_id',
         'bio',
-        'user_id'
+        'user_id',
+        'program_id',
+        'isPayed',
+        'advisor_id'
     ];
 
     protected $hidden = [

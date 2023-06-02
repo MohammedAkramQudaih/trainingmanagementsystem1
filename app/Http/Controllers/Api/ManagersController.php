@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Advisor;
 use App\Models\Manager;
+use App\Models\Program;
 use App\Models\Trainee;
 use App\Models\TrainingRequest;
 use App\Models\User;
@@ -179,7 +180,8 @@ public function acceptTrainee($id)
 
     public function acceptTrainingRequest($trainee_id, $program_id, Request $request)
     {
-
+        $program = Program::find($program_id)->first();
+        $advisor_id = $program->advisor_id;
 //        $trainingRequest = TrainingRequest::find([$program_id,$trainee_id]);
         $trainingRequest = DB::table('training_requests')
             ->where('trainee_id', '=', $trainee_id)
@@ -198,8 +200,8 @@ public function acceptTrainee($id)
                 ->update(['status' => 'Accepted']);
             $trainee = Trainee::find($trainee_id);
             $trainee->program_id = $program_id;
-            $trainee->save();
-//            $trainee->update(['program_id' => $program_id]);
+            $trainee->update(['program_id' => $program_id]);
+            $trainee->update(['$advisor_id' => $advisor_id]);
         }
         return response()->json([
             'message' => $status . " Successfully"
