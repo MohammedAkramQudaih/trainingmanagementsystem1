@@ -185,9 +185,7 @@ public function acceptTrainee($id)
             ->where('trainee_id', '=', $trainee_id)
             ->where('program_id', '=', $program_id)
             ->get();
-//        return $trainingRequest;
         $status = $request->status;
-//        return $status;
         if ($status == 'Rejected') {
             DB::table('training_requests')
                 ->where('trainee_id', '=', $trainee_id)
@@ -199,7 +197,9 @@ public function acceptTrainee($id)
                 ->where('program_id', '=', $program_id)
                 ->update(['status' => 'Accepted']);
             $trainee = Trainee::find($trainee_id);
-            $trainee->update(['program_id' => $program_id]);
+            $trainee->program_id = $program_id;
+            $trainee->save();
+//            $trainee->update(['program_id' => $program_id]);
         }
         return response()->json([
             'message' => $status . " Successfully"
